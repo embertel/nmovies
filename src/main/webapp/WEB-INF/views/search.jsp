@@ -9,19 +9,44 @@
 <body>
 	<center>
 		<h1>Movies that have "${title}" in the title:</h1>
-		<table>
-			${tableRows}
-		</table>
-		<table>
-			<c:forEach var="m" items="${movies}">
-				<tr>
-					<td>${m.title}</td>
-					<td>${m.year}</td>
-					<td><a href="http://www.imdb.com/title/${m.imdbID}/">IMDb</a></td>
-				</tr>
-			</c:forEach>
-		</table>
+		<c:choose>
+			<c:when test="${totalResults != 0}">
+				<table>
+					<tr>
+						<th>Title</th>
+						<th>Year</th>
+						<th>IMDb</th>
+					</tr>
+					<c:forEach var="m" items="${movies}">
+						<tr>
+							<td>${m.title}</td>
+							<td>${m.year}</td>
+							<td><a href="http://www.imdb.com/title/${m.imdbID}/">link</a></td>
+						</tr>
+					</c:forEach>
+				</table>
 
+				<p>
+					${page*10-9}-${page*10 < totalResults ? page*10 : totalResults} of ${totalResults} results
+				</p>
+				<p>
+					<c:if test="${page > 1}">
+						<a href="search?title=${title}&page=${page-1}">Previous</a>
+					</c:if>
+					<c:if test="${page*10 < totalResults}">
+						<a href="search?title=${title}&page=${page+1}">Next</a>
+					</c:if>
+				</p>
+			</c:when>
+			<c:otherwise>
+				<p>
+					There don't appear to be any!
+				</p>
+			</c:otherwise>
+		</c:choose>
+		<p>
+			<a href="index.jsp">Home</a>
+		</p>
 	</center>
 </body>
 </html>
