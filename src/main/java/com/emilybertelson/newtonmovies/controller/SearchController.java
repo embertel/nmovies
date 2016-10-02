@@ -1,17 +1,15 @@
 package com.emilybertelson.newtonmovies.controller;
 
+import com.emilybertelson.newtonmovies.Movie;
+import com.emilybertelson.newtonmovies.MoviesCollection;
 import com.google.gson.*;
-import com.google.gson.annotations.SerializedName;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 

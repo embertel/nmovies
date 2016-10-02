@@ -1,4 +1,4 @@
-package com.emilybertelson.newtonmovies.controller;
+package com.emilybertelson.newtonmovies;
 
 import com.google.gson.annotations.SerializedName;
 
