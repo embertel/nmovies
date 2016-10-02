@@ -1,0 +1,20 @@
+body {
+    background-color: #FAE6C5;
+    color: #571101;
+    font-family: sans-serif;
+}
+
+a, a:link, a:visited {
+    color: #A11D00;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:active, a:hover {
+    color: #E37C0E;
+}
+
+td {
+    padding-left: 8px;
+    padding-right: 8px;
+}

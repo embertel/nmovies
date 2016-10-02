@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
 <title>Results - Find movies that have "${title}" in the title</title>
 </head>
 <body>

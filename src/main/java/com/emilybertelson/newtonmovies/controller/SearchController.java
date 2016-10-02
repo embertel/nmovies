@@ -16,8 +16,10 @@ import java.util.List;
 @Controller
 public class SearchController {
 
+    // Returns deserialized response from OMDb API, given a title to search for and page number.
+    // Note that the query searches only for movies, not TV series or episodes.
     private MoviesCollection searchForMovies(String title, int page) {
-        // make the HTTP request to OMdb
+        // make the HTTP request to OMDb
         RestTemplate restTemplate = new RestTemplate();
         String response = restTemplate.getForObject(
                 "http://www.omdbapi.com/?s=" + title + "&type=movie&r=json&page=" + page,
@@ -30,40 +32,28 @@ public class SearchController {
         return moviesCollection;
     }
 
-    // not using below for now because getting ALL movies for certain queries may result in a very long
-    // results page, and a lot of separate queries without the user's consent.
-    private List<Movie> getAllMoviesContaining(String title) {
-        MoviesCollection moviesCollection = searchForMovies(title, 1);
-        List<Movie> moviesList = new ArrayList<Movie>(moviesCollection.getMovies());
-        //Movie[] moviesArray = moviesCollection.getMovies();
-
-        if(moviesCollection.getTotalResults() > 10) {
-                // each page contains up to 10 results. The line below divides the total number of
-                // results by 10 and rounds up.
-                int totalPages = (int)Math.ceil((double)moviesCollection.getTotalResults() / 10);
-
-                for(int i = 2; i <= totalPages; i++) {
-                    moviesCollection = searchForMovies(title, i);
-                    moviesList.addAll(moviesCollection.getMovies());
-                }
-        }
-
-        return moviesList;
-    }
-
     @RequestMapping("/search")
     public ModelAndView showResult(
             @RequestParam(value = "title", required = false, defaultValue = "Newton") String title,
             @RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 
-        int pageNumber = Integer.parseInt(page);
+        int pageNumber;
+        try {
+            pageNumber = Integer.parseInt(page);
+        } catch(java.lang.NumberFormatException ex) {
+            // if the page number is not an int (e.g. "2.5" or "blah"), just redirect to page 1
+            pageNumber = 1;
+        }
         // round up negative/zero page number to 1
         if(pageNumber < 1) {
             pageNumber = 1;
         }
-        // TODO can we handle too-large page numbers here?
 
         MoviesCollection moviesCollection = searchForMovies(title, pageNumber);
+
+        if(moviesCollection.getTotalResults() == 0) {
+            pageNumber = 0;
+        }
 
         // pass data to the model and view
         ModelAndView mv = new ModelAndView("search");

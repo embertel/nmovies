@@ -7,7 +7,6 @@ import java.util.List;
 public class MoviesCollection {
     @SerializedName("Search")
     private List<Movie> movies;
-
     @SerializedName("totalResults")
     private int totalResults;
 
