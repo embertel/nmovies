@@ -3,8 +3,10 @@ package com.emilybertelson.newtonmovies.services;
 import com.emilybertelson.newtonmovies.entities.MoviesCollection;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+@Service
 public class OMDbClient {
 
     // Returns deserialized response from OMDb API, given a title to search for and page number.

@@ -2,7 +2,6 @@ package com.emilybertelson.newtonmovies.controller;
 
 import com.emilybertelson.newtonmovies.entities.MoviesCollection;
 import com.emilybertelson.newtonmovies.services.OMDbClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,13 +11,14 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SearchController {
 
-    // TODO: learn proper dependency injection...
     private OMDbClient client;
 
     SearchController() {
         client = new OMDbClient();
     }
-    // this constructor is here to enable unit testing.
+
+    // TODO: learn proper dependency injection...
+    // I think there's something that can be done with @Autowired but I don't understand it yet.
     SearchController(OMDbClient client) {
         this.client = client;
     }
@@ -28,7 +28,7 @@ public class SearchController {
             @RequestParam(value = "title", required = false, defaultValue = "Newton") String title,
             @RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 
-        // change page number to something valid if it's not reasonable
+        // change page number to 1 if it's not something reasonable
         int pageNumber;
         try {
             pageNumber = Integer.parseInt(page);
