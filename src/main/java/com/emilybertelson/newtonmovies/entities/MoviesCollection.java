@@ -1,5 +1,6 @@
-package com.emilybertelson.newtonmovies;
+package com.emilybertelson.newtonmovies.entities;
 
+import com.emilybertelson.newtonmovies.entities.Movie;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

@@ -1,35 +1,26 @@
 package com.emilybertelson.newtonmovies.controller;
 
-import com.emilybertelson.newtonmovies.Movie;
-import com.emilybertelson.newtonmovies.MoviesCollection;
-import com.google.gson.*;
+import com.emilybertelson.newtonmovies.entities.MoviesCollection;
+import com.emilybertelson.newtonmovies.services.OMDbClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Controller
 public class SearchController {
 
-    // Returns deserialized response from OMDb API, given a title to search for and page number.
-    // Note that the query searches only for movies, not TV series or episodes.
-    private MoviesCollection searchForMovies(String title, int page) {
-        // make the HTTP request to OMDb
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(
-                "http://www.omdbapi.com/?s=" + title + "&type=movie&r=json&page=" + page,
-                String.class);
+    // TODO: learn proper dependency injection...
+    private OMDbClient client;
 
-        // deserialize JSON result to a MoviesCollection object
-        Gson g = new GsonBuilder().create();
-        MoviesCollection moviesCollection = g.fromJson(response, MoviesCollection.class);
-
-        return moviesCollection;
+    SearchController() {
+        client = new OMDbClient();
+    }
+    // this constructor is here to enable unit testing.
+    SearchController(OMDbClient client) {
+        this.client = client;
     }
 
     @RequestMapping("/search")
@@ -37,6 +28,7 @@ public class SearchController {
             @RequestParam(value = "title", required = false, defaultValue = "Newton") String title,
             @RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 
+        // change page number to something valid if it's not reasonable
         int pageNumber;
         try {
             pageNumber = Integer.parseInt(page);
@@ -49,8 +41,10 @@ public class SearchController {
             pageNumber = 1;
         }
 
-        MoviesCollection moviesCollection = searchForMovies(title, pageNumber);
+        // make the request to OMDb
+        MoviesCollection moviesCollection = client.searchForMovies(title, pageNumber);
 
+        // set page number to 0 if we didn't get any results
         if(moviesCollection.getTotalResults() == 0) {
             pageNumber = 0;
         }
